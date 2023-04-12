@@ -1,12 +1,12 @@
-## Implementação do algoritmo DFA para a matéria de Linguagens Formais e Autômatos
+# Implementação do algoritmo DFA para a matéria de Linguagens Formais e Autômatos
 
-### Descrição
+## Descrição
 
 O Algoritmo consiste em criar um automato a partir de uma string dada. Após esse processo, casos de teste são verificados dando a resposta se são ou não palavras válidas para o automato anterior.
 
-### Casos de Teste
+## Casos de Teste
 
-#### Input
+### Input
 
 abab
 4
@@ -15,7 +15,7 @@ abababab
 baaabbbba
 a
 
-#### Output
+### Output
 
 eps a eps
 a a ab
