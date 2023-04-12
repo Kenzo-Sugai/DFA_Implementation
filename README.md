@@ -1,4 +1,4 @@
-# Implementação do algoritmo DFA para a matéria de Linguagens Formais e Autômatos
+## Implementação do algoritmo DFA para a matéria de Linguagens Formais e Autômatos
 
 ## Descrição
 
