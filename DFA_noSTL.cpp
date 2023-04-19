@@ -16,49 +16,70 @@ class DFA {
 
         DFA(std::string word);
         bool checkWord(std::string word);
-        int getLast(std::string proximo, int i);
+        int getLast(std::string proximo);
 };
 
 DFA::DFA(std::string word){
 
-    this->word = word;
+    this->word = word; // setar palavra na classe
 
-    int n = word.size();
+    int n = word.size(); // setar tamanho da palavra
 
-    this->states = new std::string[n+1];
-    this->automato = new direction[n+1];
+    this->states = new std::string[n+1]; // redimensionar arranjo de estados (vertices)
+    this->automato = new direction[n+1]; // redimensionar arranjo de direcoes (arestas)
 
-    std::string anterior = "eps";
-    std::string proximo = "";
-    std::string back = "";
+    std::string anterior = "eps"; // primeiro estado sendo eps
+    std::string proximo = ""; // primeiro estado ainda nao captado
+    std::string error = ""; // estado errado
+
+    // prenchimento dos arranjos
 
     for(int i = 0; i < n; i++){
 
-        states[i] = anterior;
-        proximo += word[i];
-        back = proximo;
+        states[i] = anterior; // estado no indice i sera o passado, ja que arr[0] = "eps"
+        error = proximo; // pegar o estado passado para ocorrer o input errado
+        proximo += word[i]; // pegar a letra correta para o proximo estado
+
+        // caso a letra correta seja "a"
 
         if(word[i] == 'a'){
 
-            back += 'b';
+            error += 'b'; // colocar o estado errado como input "b"
 
-            automato[i] = {i+1, getLast(back, i)};
+            // setar as direcoes como:
+            // first => "a" (incrementa indice)
+            // second => "b" (chamar metodo para retornar indice)
+
+            automato[i].a = i+1;
+            automato[i].b = getLast(error);
 
         }
+
+        // caso a letra correta seja "b"
+
         if(word[i] == 'b'){
 
-            back += 'a';
+            error += 'a'; // colocar o estado errado como input "a"
 
-            automato[i] = {getLast(back, i), i+1};
+            // setar as direcoes como:
+            // first => "a" (chamar metodo para retornar indice)
+            // second => "b" (incrementa indice)
+
+            automato[i].a = getLast(error);
+            automato[i].b = i+1;
 
         }
+
+        // ultimo estado sempre sera infito
 
         if(i == n - 1){
 
-            automato[i+1] = {i+1, i+1};
+            automato[i+1].a = automato[i+1].b = i+1;
             states[i+1] = word; 
 
         }
+
+        // seta o anterior igual ao proximo para a proxima iteracao
 
         anterior = proximo;
 
@@ -66,22 +87,28 @@ DFA::DFA(std::string word){
 
 }
 
-int DFA::getLast(std::string error, int n){
-
-    int i = 0;
-
-    std::string aux = ""; 
+int DFA::getLast(std::string error){
     
-    aux += error.back();
-    error.pop_back();
+    int n = error.size(); // setar tamanho do estado errado
 
-    while(aux == this->states[i+1] && i <= n){
-        aux = error.back() + aux;
-        error.pop_back(); 
-        i++;
+    std::string errorStates[n+1]; // criar vetor com todos os estados errados 
+
+    errorStates[0] = "eps"; // primeiro estado sendo o vazio
+    errorStates[1] = error[n - 1]; // segundo estado sendo o input errado
+    
+    // programacao dinamica para pegar todos os estados
+
+    for(int i = 2; i <= n; i++){ 
+        errorStates[i] = error[n - i] + errorStates[i - 1]; 
     }
 
-    return i;
+    int i = n; // setar iterador como tamanho n
+
+    // percorrer os estados originais e os errados ate encontrar um compativel para o retorno
+
+    for(; errorStates[i] != this->states[i] && i >= 0; i--);
+    
+    return i; // retornar index do caso de retorno
 
 }
 
