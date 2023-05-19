@@ -12,16 +12,18 @@ string erro(string palavra){
 
     string aux;
     int j = 0;
+
+    palavra.erase(palavra.begin());
  
-    for(int k = palavra.size() - 1; k >= 1; k--){
+    while(!palavra.empty()){
 
-        aux.insert(aux.begin(), palavra[k]);
+      if(automato[estado][palavra.size()] == palavra) return palavra;
 
-        if(automato[estado][++j] == aux) return aux;
+      palavra.erase(palavra.begin());
 
     }
 
-    return "esp";
+    return "eps";
 
 }
 
@@ -91,7 +93,7 @@ bool verificar(string palavra_teste, string palavra_automato){
         if(palavra_teste[i] == 'a') estado_atual = automato[a][idx];
         if(palavra_teste[i] == 'b') estado_atual = automato[b][idx];
 
-        idx = (estado_atual == "esp") ? 0 : estado_atual.size();
+        idx = (estado_atual == "eps") ? 0 : estado_atual.size();
 
         if(estado_atual == palavra_automato) return true;
 
